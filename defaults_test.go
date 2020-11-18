@@ -611,3 +611,16 @@ func TestDefaultsSetter(t *testing.T) {
 		t.Errorf("expected 1 for MainInt, got %d", main.MainInt)
 	}
 }
+
+type ClearTest struct {
+	StrVal string `default:"hello world"`
+	IntVal int `default:32`
+}
+
+func TestDefaultsClearer(t *testing.T) {
+	clear := &ClearTest{}
+	ClearDefaults(clear)
+	if clear.StrVal != "" {
+		t.Errorf("string not as expected")
+	}
+}

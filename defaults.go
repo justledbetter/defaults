@@ -50,6 +50,30 @@ func MustSet(ptr interface{}) {
 	}
 }
 
+// Unset any value in the struct that is still a default value.
+func ClearDefaults(ptr interface{}) error {
+	if reflect.TypeOf(ptr).Kind() != reflect.Ptr {
+		return errInvalidType
+	}
+
+	v := reflect.ValueOf(ptr).Elem()
+	t := v.Type()
+
+	if t.Kind() != reflect.Struct {
+		return errInvalidType
+	}
+
+	for i := 0; i < t.NumField(); i++ {
+		if defaultVal := t.Field(i).Tag.Get(fieldName); defaultVal != "-" {
+			if err := clearField(v.Field(i), defaultVal); err != nil {
+				return err
+			}
+		}
+	}
+	callSetter(ptr)
+	return nil
+}
+
 func setField(field reflect.Value, defaultVal string) error {
 	if !field.CanSet() {
 		return nil
@@ -165,6 +189,22 @@ func setField(field reflect.Value, defaultVal string) error {
 				return err
 			}
 		}
+	}
+
+	return nil
+}
+
+func clearField(field reflect.Value, defaultVal string) error {
+	if !field.CanSet() {
+		return nil
+	}
+
+	if !shouldInitializeField(field, defaultVal) {
+		return nil
+	}
+
+	if isInitialValue(field) {
+		field.Set(reflect.Zero(field.Type()))
 	}
 
 	return nil
