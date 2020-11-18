@@ -203,8 +203,13 @@ func clearField(field reflect.Value, defaultVal string) error {
 		return nil
 	}
 
-	if isInitialValue(field) {
-		field.Set(reflect.Zero(field.Type()))
+	if !isInitialValue(field) {
+		switch field.Kind() {
+		case reflect.String:
+			if reflect.ValueOf(defaultVal).Convert(field.Type()) != field.Value() {
+				field.Set("")
+			}
+		}
 	}
 
 	return nil
