@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/creasty/defaults/internal/fixture"
+	"github.com/justledbetter/defaults/internal/fixture"
 )
 
 type (

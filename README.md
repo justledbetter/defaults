@@ -6,6 +6,10 @@ defaults
 [![GitHub release](https://img.shields.io/github/release/creasty/defaults.svg)](https://github.com/creasty/defaults/releases)
 [![License](https://img.shields.io/github/license/creasty/defaults.svg)](./LICENSE)
 
+NOTE: This fork adds the ability to clear unmodified default values from a struct, with the intent of making configuration files cleaner.
+
+---
+
 Initialize structs with default values
 
 - Supports almost all kind of types
