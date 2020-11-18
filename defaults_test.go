@@ -614,13 +614,20 @@ func TestDefaultsSetter(t *testing.T) {
 
 type ClearTest struct {
 	StrVal string `default:"hello world"`
-	IntVal int `default:32`
+	IntVal int    `default:32`
 }
 
 func TestDefaultsClearer(t *testing.T) {
 	clear := &ClearTest{}
+	clear.StrVal = "this is a test"
+	ClearDefaults(clear)
+	if clear.StrVal != "this is a test" {
+		t.Errorf("default string cleared when not expected")
+	}
+
+	clear.StrVal = "hello world"
 	ClearDefaults(clear)
 	if clear.StrVal != "" {
-		t.Errorf("string not as expected")
+		t.Errorf("default string not cleared when should have been")
 	}
 }

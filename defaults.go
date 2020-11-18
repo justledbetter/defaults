@@ -206,8 +206,9 @@ func clearField(field reflect.Value, defaultVal string) error {
 	if !isInitialValue(field) {
 		switch field.Kind() {
 		case reflect.String:
-			if reflect.ValueOf(defaultVal).Convert(field.Type()) != field.Value() {
-				field.Set("")
+			// Messy... Better way?
+			if reflect.ValueOf(defaultVal).Convert(field.Type()).String() == field.String() {
+				field.Set(reflect.Zero(field.Type()))
 			}
 		}
 	}
