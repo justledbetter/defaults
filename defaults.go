@@ -206,10 +206,22 @@ func clearField(field reflect.Value, defaultVal string) error {
 	if !isInitialValue(field) {
 		switch field.Kind() {
 		case reflect.String:
-			// Messy... Better way?
 			if reflect.ValueOf(defaultVal).Convert(field.Type()).String() == field.String() {
 				field.Set(reflect.Zero(field.Type()))
 			}
+		case reflect.Struct:
+			if defaultVal != "" && defaultVal != "{}" {
+				if err := json.Unmarshal([]byte(defaultVal), field.Addr().Interface()); err != nil {
+					return err
+				}
+			}
+		}
+	}
+
+	switch field.Kind() {
+	case reflect.Struct:
+		if err := ClearDefaults(field.Addr().Interface()); err != nil {
+			return err
 		}
 	}
 
